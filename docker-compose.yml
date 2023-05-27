@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+  next:
+    image: node:18-alpine
+    ports:
+      - "3030:3000"
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    working_dir: /home/node/app/
+    command: sh -c "yarn install && yarn dev"
+    depends_on:
+      - spring
+    environment:
+      NEXT_PUBLIC_API_URL: http://spring:8080
+
+  spring:
+    image: xenedium/spring-boot-reddit:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/test?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+
+  mysql:
+    image: mysql:8-debian
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+
+volumes:
+  database:
+  node_modules:
