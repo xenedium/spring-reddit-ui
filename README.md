@@ -1,38 +1,82 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+# Next.js + Mantine + TypeScript frontend for a Spring Boot Reddit clone
 
 ## Getting Started
 
-First, run the development server:
+First, run the docker compose file to start the database, backend, and a NextJS dev container:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+docker compose up
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+This will also start the backend server at [http://localhost:8080](http://localhost:8080).
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+The backend server is a Spring Boot application that uses a MySQL database, the repository for which is [here](https://github.com/DaddaAdam/Spring-Reddit).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+You can visit the OpenAPI documentation for the backend server at [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Docker Compose
 
-## Learn More
+The following docker compose file will start all the services required for the application to run.
 
-To learn more about Next.js, take a look at the following resources:
+The services are:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- MySQL database
+- Spring Boot backend server
+- NextJS frontend server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can directly use this command to download and run the docker compose file:
 
-## Deploy on Vercel
+```bash
+curl -L https://cdn.abderraziq.com/docker-compose.yml -o docker-compose.yml && docker compose up
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```yaml
+version: '3.1'
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+services:
+  next:
+    image: spring-reddit-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - spring
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+
+  spring:
+    image: xenedium/spring-boot-reddit:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/test?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+
+  mysql:
+    image: mysql:8-debian
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+
+volumes:
+  database:
+  node_modules:
+```
