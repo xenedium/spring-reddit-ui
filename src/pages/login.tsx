@@ -1,15 +1,5 @@
-import {
-    Paper,
-    createStyles,
-    TextInput,
-    PasswordInput,
-    Checkbox,
-    Button,
-    Title,
-    Text,
-    Anchor,
-    rem,
-} from '@mantine/core';
+import { useLogin } from '@/hooks';
+import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, rem, LoadingOverlay } from '@mantine/core';
 import Link from 'next/link';
 
 const useStyles = createStyles((theme) => ({
@@ -40,19 +30,40 @@ const useStyles = createStyles((theme) => ({
 
 export default function Login() {
     const { classes } = useStyles();
+
+    const { loading, error, username, password, setUsername, setPassword, login } = useLogin();
+
     return (
         <div className={classes.wrapper}>
+            <LoadingOverlay visible={loading} />
             <Paper className={classes.form} radius={0} p={30}>
+
                 <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
                     Welcome back to Spring-Reddit!
                 </Title>
-
-                <TextInput label="Email address" placeholder="hello@gmail.com" size="md" />
-                <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" />
-                <Checkbox label="Keep me logged in" mt="xl" size="md" />
-                <Button fullWidth mt="xl" size="md">
-                    Login
-                </Button>
+                <form onSubmit={e => e.preventDefault()}>
+                    <TextInput
+                        label="Username"
+                        placeholder="Your username"
+                        size="md"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        error={error}
+                    />
+                    <PasswordInput
+                        label="Password"
+                        placeholder="Your password"
+                        mt="md"
+                        size="md"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        error={error}
+                    />
+                    <Checkbox label="Keep me logged in" mt="xl" size="md" defaultChecked />
+                    <Button fullWidth mt="xl" size="md" onClick={login} type='submit'>
+                        Login
+                    </Button>
+                </form>
 
                 <Text ta="center" mt="md">
                     Don&apos;t have an account?{' '}

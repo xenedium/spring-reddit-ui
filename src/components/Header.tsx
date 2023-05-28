@@ -9,12 +9,19 @@ import {
     Drawer,
     ScrollArea,
     rem,
+    Menu,
+    UnstyledButton,
+    Avatar,
+    Text
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Image from 'next/image';
 import { InputWithButton } from './Searchbar';
 import { ButtonToggle } from './ButtonToggle';
 import { useRouter } from 'next/router';
+import { User } from '@/types';
+import { IconArrowDown, IconArrowUp, IconChevronDown, IconDoor, IconLogout, IconMessage, IconPlus } from '@tabler/icons-react';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -73,12 +80,32 @@ const useStyles = createStyles((theme) => ({
             display: 'none',
         },
     },
+    user: {
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+        padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+        borderRadius: theme.radius.sm,
+        transition: 'background-color 100ms ease',
+
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+        },
+
+    },
+    userActive: {
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+    },
 }));
 
-export function HeaderMenu() {
+export function HeaderMenu(user: User) {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-    const { classes, theme } = useStyles();
+    const { classes, theme, cx } = useStyles();
+    const [userMenuOpened, setUserMenuOpened] = useState(false);
     const router = useRouter();
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        router.push('/login');
+    }
 
 
     return (
@@ -98,8 +125,72 @@ export function HeaderMenu() {
 
                     <Group className={classes.hiddenMobile}>
                         <ButtonToggle />
-                        <Button variant="default" onClick={() => router.push("/login")}>Log in</Button>
-                        <Button onClick={() => router.push("/register")}>Sign up</Button>
+                        <Menu
+                            width={260}
+                            position="bottom-end"
+                            transitionProps={{ transition: 'pop-top-right' }}
+                            onClose={() => setUserMenuOpened(false)}
+                            onOpen={() => setUserMenuOpened(true)}
+                            withinPortal
+                        >
+                            <Menu.Target>
+                                <UnstyledButton
+                                    className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+                                >
+                                    <Group spacing={7}>
+                                        <Avatar src={""} alt={user.username} radius="xl" size={20} />
+                                        <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                                            {user.username}
+                                        </Text>
+                                        <IconChevronDown size={rem(12)} stroke={1.5} />
+                                    </Group>
+                                </UnstyledButton>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Label>Create</Menu.Label>
+                                <Menu.Item
+                                    icon={<IconMessage size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
+                                    onClick={() => router.push('/create-post')}
+                                >
+                                    New Post</Menu.Item>
+                                <Menu.Item
+                                    icon={<IconPlus size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
+                                    onClick={() => router.push('/create-subreddit')}
+                                >
+                                    New Subreddit
+                                </Menu.Item>
+                                <Menu.Divider />
+                                <Menu.Item
+                                    icon={<IconArrowUp size="0.9rem" color={theme.colors.green[6]} stroke={1.5} />}
+                                    onClick={() => router.push('/upvoted-posts')}
+                                >
+                                    Upvoted posts
+                                </Menu.Item>
+                                <Menu.Item
+                                    icon={<IconArrowDown size="0.9rem" color={theme.colors.red[6]} stroke={1.5} />}
+                                    onClick={() => router.push('/downvoted-posts')}
+                                >
+                                    Downvoted posts
+                                </Menu.Item>
+                                <Menu.Item
+                                    icon={<IconMessage size="0.9rem" color={theme.colors.blue[6]} stroke={1.5} />}
+                                    onClick={() => router.push('/my-posts')}
+                                >
+                                    Your posts
+                                </Menu.Item>
+                                <Menu.Divider />
+                                <Menu.Label>Settings</Menu.Label>
+
+                                <Menu.Item
+                                    icon={<IconLogout size="0.9rem" stroke={1.5} />}
+                                    onClick={() => {
+                                        logout();
+                                    }}
+                                >
+                                    Logout
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
                     </Group>
 
                     <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
@@ -122,8 +213,56 @@ export function HeaderMenu() {
 
                     <Group position="center" grow pb="xl" px="md">
                         <ButtonToggle />
-                        <Button variant="default" onClick={() => router.push("/login")}>Log in</Button>
-                        <Button onClick={() => router.push("/register")}>Sign up</Button>
+                    </Group>
+                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+
+                    <Group position="center" grow pb="xl" px="md">
+                        <Button
+                            leftIcon={<IconMessage size="0.9rem" stroke={1.5} />}
+                            onClick={() => router.push('/create-post')}
+                        >
+                            New Post
+                        </Button>
+
+                        <Button
+                            leftIcon={<IconPlus size="0.9rem" stroke={1.5} />}
+                            onClick={() => router.push('/create-subreddit')}
+                        >
+                            New Subreddit
+                        </Button>
+                    </Group>
+                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+                    <Group position="center" grow pb="xl" px="md">
+                        <Button
+                            leftIcon={<IconArrowUp size="0.9rem" stroke={1.5} />}
+                            onClick={() => router.push('/upvoted-posts')}
+                        >
+                            Upvoted posts
+                        </Button>
+                        <Button
+                            leftIcon={<IconArrowDown size="0.9rem" stroke={1.5} />}
+                            onClick={() => router.push('/downvoted-posts')}
+                        >
+                            Downvoted posts
+                        </Button>
+                    </Group>
+                    <Group position="center" grow pb="xl" px="md">
+                        <Button
+                            leftIcon={<IconMessage size="0.9rem" stroke={1.5} />}
+                            onClick={() => router.push('/my-posts')}
+                        >
+
+                            My posts
+                        </Button>
+                    </Group>
+                    <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+                    <Group position="center" grow pb="xl" px="md">
+                        <Button
+                            leftIcon={<IconLogout size="0.9rem" stroke={1.5} />}
+                            onClick={() => logout()}
+                        >
+                            Logout
+                        </Button>
                     </Group>
                 </ScrollArea>
             </Drawer>

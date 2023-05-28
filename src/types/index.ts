@@ -5,4 +5,6 @@ export type { LoginResponse } from "./Auth/LoginResponse";
 export type { SignupRequest } from "./Auth/SignupRequest";
 export type { LoginRequest } from "./Auth/LoginRequest";
 
+export type { UserResponse } from "./Responses/UserResponse";
+
 export type { User } from "./Dtos/User";
