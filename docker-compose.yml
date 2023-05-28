@@ -13,7 +13,7 @@ services:
     depends_on:
       - spring
     environment:
-      NEXT_PUBLIC_API_URL: http://spring:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8080
 
   spring:
     image: xenedium/spring-boot-reddit:latest
