@@ -38,7 +38,7 @@ version: '3.1'
 
 services:
   next:
-    image: spring-reddit-ui
+    image: xenedium/spring-reddit-ui
     ports:
       - "3000:3000"
     depends_on:
