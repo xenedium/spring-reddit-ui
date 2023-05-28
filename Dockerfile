@@ -1,5 +1,6 @@
 FROM node:18-alpine as builder
 WORKDIR /app
+ENV NEXT_PUBLIC_API_URL http://localhost:8080
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
