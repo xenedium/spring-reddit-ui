@@ -46,7 +46,7 @@ export function PostCard({ post }: { post: Post }) {
     }, []);
 
     const getComments = () => {
-        axios.get<GenericResponse<Comment[]>>(`/api/post/${post.id}/comments`)
+        axios.get<GenericResponse<Comment[]>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${post.id}/comments`)
             .then(res => {
                 setComments(res.data.data);
             })
@@ -56,10 +56,10 @@ export function PostCard({ post }: { post: Post }) {
     }
 
     const Upvote = () => {
-        axios.post<GenericResponse<null>>(`/api/post/upvote/${post.id}`)
+        axios.post<GenericResponse<null>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/upvote/${post.id}`)
             .then(res => {
                 console.log(res.data);
-                axios.get<GenericResponse<Post>>(`/api/post/${post.id}`)
+                axios.get<GenericResponse<Post>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${post.id}`)
                     .then(res => {
                         setVoteCount(res.data.data.voteCount);
                     })
@@ -73,10 +73,10 @@ export function PostCard({ post }: { post: Post }) {
     };
 
     const Downvote = () => {
-        axios.post<GenericResponse<null>>(`/api/post/downvote/${post.id}`)
+        axios.post<GenericResponse<null>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/downvote/${post.id}`)
             .then(res => {
                 console.log(res.data);
-                axios.get<GenericResponse<Post>>(`/api/post/${post.id}`)
+                axios.get<GenericResponse<Post>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/${post.id}`)
                     .then(res => {
                         setVoteCount(res.data.data.voteCount);
                     })
@@ -90,7 +90,7 @@ export function PostCard({ post }: { post: Post }) {
     };
 
     const submitComment = () => {
-        axios.post<GenericResponse<null>>('/api/comment', {
+        axios.post<GenericResponse<null>>(`${process.env.NEXT_PUBLIC_API_URL}/api/comment`, {
             postId: post.id,
             text: comment,
         })

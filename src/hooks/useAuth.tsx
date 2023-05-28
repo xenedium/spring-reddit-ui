@@ -12,7 +12,7 @@ export const useAuth = () => {
     useEffect(() => {
         if (localStorage.getItem('token')) {
             axios.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-            axios.get<UserResponse>('/api/auth/me')
+            axios.get<UserResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`)
                 .then(res => {
                     setUser(res.data.data);
                     setReady(true);

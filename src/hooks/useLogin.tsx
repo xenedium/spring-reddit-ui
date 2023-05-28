@@ -19,7 +19,7 @@ export const useLogin = () => {
     const login = () => {
         setLoading(true);
         setError(null);
-        axios.post<LoginResponse>('/api/auth/login', { username, password } as LoginRequest)
+        axios.post<LoginResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, { username, password } as LoginRequest)
             .then(response => {
                 response.data.token && localStorage.setItem('token', response.data.token);
                 axios.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;

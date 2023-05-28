@@ -24,7 +24,7 @@ export const useRegister = () => {
         }
         setLoading(true);
         setError(null);
-        axios.post<SignupResponse>('/api/auth/signup', { email, username, password } as SignupRequest)
+        axios.post<SignupResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, { email, username, password } as SignupRequest)
             .then(response => {
                 setSuccess(true);
             })

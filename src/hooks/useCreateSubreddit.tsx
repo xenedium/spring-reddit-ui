@@ -18,7 +18,7 @@ export const useCreateSubreddit = () => {
         setLoading(true);
         setError(null);
 
-        axios.post<GenericResponse<Subreddit>>('/api/subreddit', {
+        axios.post<GenericResponse<Subreddit>>(`${process.env.NEXT_PUBLIC_API_URL}/api/subreddit`, {
             name,
             description,
         } as SubredditRequest)

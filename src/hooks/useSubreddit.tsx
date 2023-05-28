@@ -10,10 +10,10 @@ export const useSubreddit = ({ name, ready }: { name: string, ready: boolean }) 
     const router = useRouter();
     useEffect(() => {
         if (!ready || !name) return;
-        axios.get<GenericResponse<Subreddit>>(`/api/subreddit/${name}`)
+        axios.get<GenericResponse<Subreddit>>(`${process.env.NEXT_PUBLIC_API_URL}/api/subreddit/${name}`)
             .then((res) => {
                 setSubreddit(res.data.data);
-                axios.get<GenericResponse<Post[]>>(`/api/post/sub-name/${name}`)
+                axios.get<GenericResponse<Post[]>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/sub-name/${name}`)
                     .then((res) => {
                         setPosts(res.data.data);
                     })

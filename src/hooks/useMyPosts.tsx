@@ -8,7 +8,7 @@ export const useMyPosts = ({ ready }: { ready: boolean }) => {
 
     useEffect(() => {
         if (ready) {
-            axios.get<GenericResponse<Post[]>>('/api/post/me')
+            axios.get<GenericResponse<Post[]>>(`${process.env.NEXT_PUBLIC_API_URL}/api/post/me`)
                 .then(res => {
                     setPosts(res.data.data);
                 })
