@@ -61,7 +61,7 @@ export default function Register() {
                         variant="light"
                         size="lg"
                         mt="xl"
-                        onClick={() => { router.push('/login') }}
+                        onClick={() => { router.replace('/login') }}
                     >
                         <Text size="sm">Login</Text>
                     </Button>

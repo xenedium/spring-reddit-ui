@@ -12,16 +12,17 @@ import {
     Menu,
     UnstyledButton,
     Avatar,
-    Text
+    Text,
+    LoadingOverlay
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Image from 'next/image';
 import { InputWithButton } from './Searchbar';
 import { ButtonToggle } from './ButtonToggle';
 import { useRouter } from 'next/router';
-import { User } from '@/types';
-import { IconArrowDown, IconArrowUp, IconChevronDown, IconDoor, IconLogout, IconMessage, IconPlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { User, UserResponse } from '@/types';
+import { IconArrowDown, IconArrowUp, IconChevronDown, IconLogout, IconMessage, IconPlus } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -110,6 +111,7 @@ export function HeaderMenu(user: User) {
 
     return (
         <Box pb={120}>
+            <LoadingOverlay visible={user.username === ''} />
             <Header height={60} px="md">
                 <Group position="apart" sx={{ height: '100%' }}>
                     <Image
@@ -117,6 +119,8 @@ export function HeaderMenu(user: User) {
                         alt="Reddit logo"
                         width={50}
                         height={50}
+                        onClick={() => router.push('/')}
+                        style={{ cursor: 'pointer' }}
                     />
 
                     <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
