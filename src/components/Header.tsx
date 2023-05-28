@@ -153,29 +153,12 @@ export function HeaderMenu(user: User) {
                             <Menu.Dropdown>
                                 <Menu.Label>Create</Menu.Label>
                                 <Menu.Item
-                                    icon={<IconMessage size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
-                                    onClick={() => router.push('/create-post')}
-                                >
-                                    New Post</Menu.Item>
-                                <Menu.Item
                                     icon={<IconPlus size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
                                     onClick={() => router.push('/create-subreddit')}
                                 >
                                     New Subreddit
                                 </Menu.Item>
                                 <Menu.Divider />
-                                <Menu.Item
-                                    icon={<IconArrowUp size="0.9rem" color={theme.colors.green[6]} stroke={1.5} />}
-                                    onClick={() => router.push('/upvoted-posts')}
-                                >
-                                    Upvoted posts
-                                </Menu.Item>
-                                <Menu.Item
-                                    icon={<IconArrowDown size="0.9rem" color={theme.colors.red[6]} stroke={1.5} />}
-                                    onClick={() => router.push('/downvoted-posts')}
-                                >
-                                    Downvoted posts
-                                </Menu.Item>
                                 <Menu.Item
                                     icon={<IconMessage size="0.9rem" color={theme.colors.blue[6]} stroke={1.5} />}
                                     onClick={() => router.push('/my-posts')}
